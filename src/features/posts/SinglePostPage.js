@@ -1,6 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import {TimeAgo} from './TimeAgo'
+
 
 export const SinglePostPage = ({ match }) => {
   console.log(match)
@@ -26,6 +28,7 @@ export const SinglePostPage = ({ match }) => {
                 <Link to={`/editPost/${post.id}`} className="button">
           Edit Post
         </Link>
+        <TimeAgo timestamp={post.date}/>
       </article>
     </section>
   )

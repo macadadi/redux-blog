@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 import {postAdded} from './postsSlice'
+
 import { nanoid } from '@reduxjs/toolkit'
 
 export const AddPostForm = () => {

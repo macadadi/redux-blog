@@ -2,7 +2,8 @@ import {useSelector} from 'react-redux'
 import React from "react"
 import { Link } from 'react-router-dom'
 import {  PostAuthor} from './PostAuthor'
-
+import {TimeAgo} from './TimeAgo'
+import {ReactionButtons} from "./ReactionButtons"
 export const PostsList =()=>{
 	const posts = useSelector((state)=>state.posts)
     const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
@@ -16,6 +17,8 @@ export const PostsList =()=>{
         View Post
       </Link>
       <PostAuthor  userId={post.user} />
+      <TimeAgo timestamp={post.date} />
+      <ReactionButtons  post={post}/>
     </article>
   ))
 
