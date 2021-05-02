@@ -36,8 +36,7 @@ export const NotificationsList = () => {
       </div>
     )
   })
-
-  return (
+ return (
     <section className="notificationsList">
       <h2>Notifications</h2>
       {renderedNotifications}
