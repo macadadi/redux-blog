@@ -8,20 +8,31 @@ import { selectAllPosts,fetchPosts } from './postsSlice'
 
 
 export const PostsList =()=>{
+	let content
 	  const dispatch = useDispatch()
 	const posts = useSelector( state=>selectAllPosts(state))
 
 	  const postStatus = useSelector(state => state.posts.status)
+	   const error = useSelector(state => state.posts.error)
 
   useEffect(() => {
     if (postStatus === 'idle') {
       dispatch(fetchPosts())
+
     }
   }, [postStatus, dispatch])
-    const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
 
-	const renderedPosts = orderedPosts.map(post => (
+
+   
+  
+
+  if (postStatus === 'pending') {
+    content = <div className="loader">Loading...</div>
+  }
+   else if (postStatus === 'success') {
+     const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+    content = orderedPosts.map(post => (
     <article className="post-excerpt" key={post.id}>
       <h3>{post.title}</h3>
       <p className="post-content">{post.content.substring(0, 100)}</p>
@@ -34,9 +45,22 @@ export const PostsList =()=>{
     </article>
   ))
 
+  } else if (postStatus === 'failed') {
+    content = <div>{error}</div>
+  }
+
+
+
+
+
+
+
+
+
+
 	return(<section className="posts-list">
       <h2>Posts</h2>
-      {renderedPosts}
+      {content}
     </section>)
 }
 

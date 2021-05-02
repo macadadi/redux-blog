@@ -4,6 +4,17 @@ import { sub } from 'date-fns'
 
 
 
+export const addNewPost = createAsyncThunk(
+  'posts/addNewPost',
+  // The payload creator receives the partial `{title, content, user}` object
+  async initialPost => {
+    // We send the initial data to the fake API server
+    const response = await client.post('/fakeApi/posts', { post: initialPost })
+    // The response includes the complete post object, including unique ID
+    return response.post
+  }
+)
+
 export const fetchPosts = createAsyncThunk('posts/fetching',async ()=>{
 	const response = await client.get('/fakeApi/posts')
 
@@ -11,7 +22,9 @@ export const fetchPosts = createAsyncThunk('posts/fetching',async ()=>{
 })
 
 const initialState = {
-	posts : []
+  posts: [],
+  status: 'idle',
+  error: null
 }
 
 const postsSlice = createSlice({
@@ -32,7 +45,7 @@ const postsSlice = createSlice({
       prepare(title, content,userId) {
         return {
           payload: {
-            id: nanoid(),
+
             title,
             content,
             date: new Date().toISOString(),
@@ -56,7 +69,25 @@ const postsSlice = createSlice({
         existingPost.content = content
       }
     }
-  }
+  },
+  extraReducers : {
+        [fetchPosts.pending] :(state,action)=>{
+        	state.status='pending'
+        },
+        [fetchPosts.fulfilled] : (state,action) =>{
+        	state.status = 'success'
+        	state.posts = state.posts.concat(action.payload)
+        },
+        [fetchPosts.rejected]: (state,action)=>{
+        	state.status = 'failed'
+        	 state.error = action.error.message
+        },
+        [addNewPost.fulfilled]: (state, action) => {
+      // We can directly add the new post object to our posts array
+            state.posts.push(action.payload)
+            }
+  },
+
 })
 
 export const { postAdded, postUpdated , reactionAdded} = postsSlice.actions
